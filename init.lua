@@ -1,4 +1,5 @@
 local function gh(repo) return 'https://github.com/' .. repo end
+local vim = vim
 local g = vim.g
 local o = vim.o
 
@@ -118,6 +119,12 @@ do
   })
 end
 
+-- updater
+do
+  vim.pack.add { gh 'swaits/tiny-packupdate.nvim' }
+  require('tiny-packupdate').setup()
+end
+
 do
   vim.pack.add { gh 'NMAC427/guess-indent.nvim' }
   require('guess-indent').setup {}
@@ -200,8 +207,14 @@ end
 do
   vim.pack.add { gh 'chomosuke/typst-preview.nvim' }
   require('typst-preview').setup {
-    port = 8192
+    port = 8192,
   }
+end
+
+-- Live Preview
+do
+  vim.pack.add { gh 'brianhuster/live-preview.nvim' }
+  require('live-preview').setup()
 end
 
 do
@@ -278,8 +291,10 @@ do
     -- gopls = {},
     -- pyright = {},
     rust_analyzer = {},
-    --hls = {},
+    hls = {},
     tinymist = {},
+    html = {},
+    css_variables = {},
 
     stylua = {}, -- Used to format Lua code
 
@@ -395,7 +410,7 @@ do
 
   -- NOTE: You can also specify plugin using a version range for its git tag.
   --  See `:help vim.version.range()` for more info
-  vim.pack.add { { src = gh 'L3MON4D3/LuaSnip' } }
+  vim.pack.add { { src = gh 'L3MON4D3/LuaSnip', version = vim.version.range '2.*' } }
   require('luasnip').setup {}
 
   -- `friendly-snippets` contains a variety of premade snippets.
@@ -406,10 +421,10 @@ do
   require('luasnip.loaders.from_vscode').lazy_load()
 
   -- [[ Autocomplete Engine ]]
-  vim.pack.add { { src = gh 'saghen/blink.cmp' } }
+  vim.pack.add { { src = gh 'saghen/blink.cmp', version = vim.version.range '1.*' } }
   require('blink.cmp').setup {
     enabled = function()
-      local disabled_filetypes = { 'haskell' }
+      local disabled_filetypes = {}
       return not vim.tbl_contains(disabled_filetypes, vim.bo.filetype)
     end,
     keymap = {
